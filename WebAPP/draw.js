@@ -43,6 +43,8 @@ export function drawCarLR(angle) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.translate(50,40);
   ctx.rotate(-angle * Math.PI / 180);
   if (!carLRImg) {
@@ -66,6 +68,8 @@ export function drawCarVH(angle) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.translate(50,40);
   ctx.rotate(-angle * Math.PI / 180);
   if (!carVHImg) {
