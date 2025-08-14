@@ -1,0 +1,135 @@
+esphome:
+  name: vanalign
+  friendly_name: "VanAlign Pro"
+
+esp32:
+  board: esp32-s3-devkitc-1
+
+logger:
+  level: WARN
+
+sensor:
+  - platform: mpu6050
+    #address: 0x69
+    gyro_x:
+      name: "MPU6050 Gyro X-Achse"
+      id: mpu_gyro_x
+    gyro_y:
+      name: "MPU6050 Gyro Y-Achse"
+      id: mpu_gyro_y
+    gyro_z:
+      name: "MPU6050 Gyro Z-Achse"
+      id: mpu_gyro_z
+    accel_x:
+      name: "MPU6050 Accel X"
+      id: accel_x
+    accel_y:
+      name: "MPU6050 Accel Y"
+      id: accel_y
+    accel_z:
+      name: "MPU6050 Accel Z"
+      id: accel_z
+    update_interval: 0.1s
+  - platform: template
+    name: "Neigung Pitch"
+    id: pitch
+    icon: mdi:caravan
+    unit_of_measurement: "°"
+    accuracy_decimals: 1
+    update_interval: 0.1s
+    lambda: |-
+      if (isnan(id(accel_x).state) || isnan(id(accel_y).state) || isnan(id(accel_z).state)) {
+        return NAN;
+      }
+      float raw = atan2(id(accel_y).state, sqrt(pow(id(accel_x).state, 2) + pow(id(accel_z).state, 2))) * (180.0 / 3.14159265);
+      return raw - id(pitch_offset); // Offset wird hier subtrahiert
+    filters:
+      - sliding_window_moving_average:
+          window_size: 8
+          send_every: 1
+      - exponential_moving_average:
+          alpha: 0.2
+  - platform: template
+    name: "Neigung Roll"
+    id: roll
+    icon: mdi:axis-x-rotate-clockwise
+    unit_of_measurement: "°"
+    accuracy_decimals: 1
+    update_interval: 0.1s
+    lambda: |-
+      if (isnan(id(accel_x).state) || isnan(id(accel_z).state)) {
+        return NAN;
+      }
+      float raw = atan2(-id(accel_x).state, id(accel_z).state) * (180.0 / 3.14159265);
+      return raw - id(roll_offset); // Offset wird hier subtrahiert
+    filters:
+      - sliding_window_moving_average:
+          window_size: 8
+          send_every: 1
+      - exponential_moving_average:
+          alpha: 0.2
+
+globals:
+  - id: pitch_offset
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+  - id: roll_offset
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+
+esp32_ble_server:
+  services:
+    - uuid: 2a24b789-7aab-4535-af3e-ee76a35cc42d
+      advertise: true
+      characteristics:
+        - id: pitch_ble
+          uuid: cad48e28-7fbe-41cf-bae9-d77a6c233424
+          description: "Pitch"
+          read: true
+          value: !lambda |-
+            std::vector<unsigned char> v(sizeof(float));
+            float val = id(pitch).state;
+            memcpy(v.data(), &val, sizeof(float));
+            return v;
+        - id: roll_ble
+          uuid: cad48e28-7fbe-41cf-bae9-d77a6c233425
+          description: "Roll"
+          read: true
+          value: !lambda |-
+            std::vector<unsigned char> v(sizeof(float));
+            float val = id(roll).state;
+            memcpy(v.data(), &val, sizeof(float));
+            return v;
+        - id: calib_ble
+          uuid: cad48e28-7fbe-41cf-bae9-d77a6c233427
+          description: "Kalibriere Neigung"
+          write: true
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9 
+  scan: true
+
+web_server:
+  port: 80
+  auth:
+    username: "admin"
+    password: "kalibrierung"
+
+wifi:
+  ap:
+    ssid: "VanAlign-Setup"
+    password: "kalibrierung"
+
+button:
+  - platform: template
+    name: "Kalibriere Neigung"
+    id: calib_button
+    on_press:
+      then:
+        - lambda: |-
+            id(pitch_offset) = atan2(id(accel_y).state, sqrt(pow(id(accel_x).state, 2) + pow(id(accel_z).state, 2))) * (180.0 / 3.14159265);
+            id(roll_offset) = atan2(-id(accel_x).state, id(accel_z).state) * (180.0 / 3.14159265);
+            ESP_LOGI("main", "Kalibrierung durchgeführt: pitch_offset=%.2f, roll_offset=%.2f", id(pitch_offset), id(roll_offset));
