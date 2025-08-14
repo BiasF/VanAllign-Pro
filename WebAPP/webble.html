@@ -174,14 +174,19 @@
                 pitchLabel = -lastPitch; rollLabel = -lastRoll;
               }
               let labelMode = document.getElementById('labelMode').value;
-              let pitchText = 'Pitch (vorne/hinten)';
-              let rollText = 'Roll (links/rechts)';
+              let directionText = '';
               if (labelMode === 'lr_vh') {
-                pitchText = 'Vorne/Hinten';
-                rollText = 'Links/Rechts';
+                if (rollLabel > 2) directionText += 'Auto neigt nach rechts\n';
+                else if (rollLabel < -2) directionText += 'Auto neigt nach links\n';
+                else directionText += 'Auto steht gerade (links/rechts)\n';
+                if (pitchLabel > 2) directionText += 'Auto neigt nach vorne';
+                else if (pitchLabel < -2) directionText += 'Auto neigt nach hinten';
+                else directionText += 'Auto steht gerade (vorne/hinten)';
+                document.getElementById('tilt').textContent = directionText + `\nLinks/Rechts: ${Math.round(rollLabel)}°\nVorne/Hinten: ${Math.round(pitchLabel)}°`;
+              } else {
+                document.getElementById('tilt').textContent =
+                  `Pitch: ${Math.round(pitchLabel)}°\nRoll: ${Math.round(rollLabel)}°`;
               }
-              document.getElementById('tilt').textContent =
-                `${pitchText}: ${Math.round(pitchLabel)}°\n${rollText}: ${Math.round(rollLabel)}°`;
               drawLevel(x, y);
               document.getElementById('output').textContent = '';
             } else {
