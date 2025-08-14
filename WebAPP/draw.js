@@ -70,7 +70,7 @@ export function drawCarVH(angle) {
   ctx.save();
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
-  ctx.translate(50,40);
+  ctx.translate(50,32.5);
   ctx.rotate(-angle * Math.PI / 180);
   if (!carVHImg) {
     carVHImg = new Image();
@@ -82,7 +82,7 @@ export function drawCarVH(angle) {
     return;
   }
   if (carVHImg.complete) {
-    ctx.drawImage(carVHImg, -50, -40, 100, 80);
+    ctx.drawImage(carVHImg, -50, -32.5, 100, 65);
   }
   ctx.restore();
 }
