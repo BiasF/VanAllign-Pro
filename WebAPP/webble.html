@@ -290,22 +290,58 @@
           ctx.restore();
         };
       }
-    </script>
-              }
-              drawLevel(x, y);
-              document.getElementById('output').textContent = '';
-            } else {
-              document.getElementById('tilt').textContent = 'Wert nicht verfügbar';
-              document.getElementById('output').textContent = '';
             }
-          } catch (err) {
-            document.getElementById('output').textContent = 'Fehler beim Lesen: ' + err;
+            drawLevel(x, y);
+            document.getElementById('output').textContent = '';
+          } else {
+            document.getElementById('tilt').textContent = 'Wert nicht verfügbar';
+            document.getElementById('output').textContent = '';
           }
-        }, 1000);
-      } catch (error) {
-        document.getElementById('output').textContent = 'Fehler: ' + error;
-      }
+        } catch (err) {
+          document.getElementById('output').textContent = 'Fehler beim Lesen: ' + err;
+        }
+      }, 1000);
+    } catch (error) {
+      document.getElementById('output').textContent = 'Fehler: ' + error;
+    }
+  };
+  // Zeichnet ein Auto von oben, rotiert je nach Links/Rechts-Neigung
+  function drawCarLR(angle) {
+    const canvas = document.getElementById('carLR');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    ctx.translate(30,30);
+    ctx.rotate(angle * Math.PI / 180);
+    // Auto-Körper
+    ctx.fillStyle = '#1976d2';
+    ctx.fillRect(-20,-10,40,20);
+    // Fenster
+    ctx.fillStyle = '#90caf9';
+    ctx.fillRect(-10,-7,20,14);
+    // Räder
+    ctx.fillStyle = '#333';
+    ctx.fillRect(-18,-13,8,6);
+    ctx.fillRect(10,-13,8,6);
+    ctx.fillRect(-18,7,8,6);
+    ctx.fillRect(10,7,8,6);
+    ctx.restore();
+  }
+  // Zeichnet ein Auto von der Seite, kippt je nach Vorne/Hinten-Neigung
+  function drawCarVH(angle) {
+    const canvas = document.getElementById('carVHimg');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    ctx.translate(30,30);
+    ctx.rotate(-angle * Math.PI / 180);
+    const img = new Image();
+    img.src = 'seitenansicht.png';
+    img.onload = function() {
+      ctx.drawImage(img, -25, -20, 50, 40);
+      ctx.restore();
     };
-  </script>
+  }
+</script>
 </body>
 </html>
