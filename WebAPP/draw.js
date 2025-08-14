@@ -1,13 +1,14 @@
 // Canvas-Zeichnung und Auto-Icons
 export function drawLevel(x, y) {
   const canvas = document.getElementById('levelCanvas');
-  let size = Math.min(canvas.parentElement.offsetWidth, 300);
+  let size = Math.max(60, Math.min(canvas.parentElement.offsetWidth, 300)); // Mindestgröße 60
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const radius = Math.max(10, size/2-10); // Radius nie negativ
   ctx.beginPath();
-  ctx.arc(size/2, size/2, size/2-10, 0, 2 * Math.PI);
+  ctx.arc(size/2, size/2, radius, 0, 2 * Math.PI);
   ctx.strokeStyle = '#333';
   ctx.lineWidth = 4;
   ctx.stroke();
@@ -17,7 +18,7 @@ export function drawLevel(x, y) {
   ctx.fillText('+30°', size-50, size/2);
   ctx.fillText('0°', size/2-10, size-10);
   ctx.beginPath();
-  ctx.arc(size/2, size/2, size/20, 0, 2 * Math.PI);
+  ctx.arc(size/2, size/2, Math.max(2, size/20), 0, 2 * Math.PI); // Mindest-Radius 2
   ctx.fillStyle = '#bbb';
   ctx.fill();
   ctx.strokeStyle = '#888';
@@ -25,10 +26,10 @@ export function drawLevel(x, y) {
   ctx.stroke();
   x = Math.max(-30, Math.min(30, x));
   y = Math.max(-30, Math.min(30, y));
-  const bubbleX = size/2 + (x * (size/2-30) / 30);
-  const bubbleY = size/2 + (y * (size/2-30) / 30);
+  const bubbleX = size/2 + (x * (radius-20) / 30);
+  const bubbleY = size/2 + (y * (radius-20) / 30);
   ctx.beginPath();
-  ctx.arc(bubbleX, bubbleY, size/12, 0, 2 * Math.PI);
+  ctx.arc(bubbleX, bubbleY, Math.max(2, size/12), 0, 2 * Math.PI); // Mindest-Radius 2
   ctx.fillStyle = '#4fc3f7';
   ctx.fill();
   ctx.strokeStyle = '#1976d2';
