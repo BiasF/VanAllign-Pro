@@ -2,6 +2,7 @@ esphome:
   name: vanalign
   friendly_name: "VanAlign Pro"
 
+
 esp32:
   board: esp32-s3-devkitc-1
 
@@ -23,12 +24,15 @@ sensor:
     accel_x:
       name: "MPU6050 Accel X"
       id: accel_x
+      internal: true
     accel_y:
       name: "MPU6050 Accel Y"
       id: accel_y
+      internal: true
     accel_z:
       name: "MPU6050 Accel Z"
       id: accel_z
+      internal: true
     update_interval: 0.1s
   - platform: template
     name: "Neigung Pitch"
@@ -78,6 +82,10 @@ globals:
     type: float
     restore_value: yes
     initial_value: '0.0'
+  - id: enable_captive
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
 
 esp32_ble_server:
   services:
@@ -118,10 +126,16 @@ web_server:
     username: "admin"
     password: "kalibrierung"
 
+ota:
+  platform: web_server
+
+
 wifi:
   ap:
     ssid: "VanAlign-Setup"
     password: "kalibrierung"
+
+
 
 button:
   - platform: template
@@ -133,3 +147,13 @@ button:
             id(pitch_offset) = atan2(id(accel_y).state, sqrt(pow(id(accel_x).state, 2) + pow(id(accel_z).state, 2))) * (180.0 / 3.14159265);
             id(roll_offset) = atan2(-id(accel_x).state, id(accel_z).state) * (180.0 / 3.14159265);
             ESP_LOGI("main", "Kalibrierung durchgeführt: pitch_offset=%.2f, roll_offset=%.2f", id(pitch_offset), id(roll_offset));
+  - platform: restart
+    name: "ESP Restart"
+
+text_sensor:
+  - platform: template
+    name: "Firmware Version"
+    id: firmware_version
+    icon: mdi:tag
+    lambda: |-
+      return {"v1.0.1"};
