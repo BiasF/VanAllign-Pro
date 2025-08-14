@@ -116,12 +116,14 @@
       <div id="tilt_lr" style="font-size:1.2em; margin-bottom:1em;"></div>
       <div id="tilt_vh" style="font-size:1.2em; margin-bottom:1em;"></div>
       <div style="display:flex;justify-content:center;gap:2em;">
-        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:100px;">
+        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:120px;display:flex;flex-direction:column;align-items:center;">
           <h3>Links/Rechts</h3>
+          <canvas id="carLR" width="60" height="60" style="margin-bottom:0.5em;"></canvas>
           <div id="lr_val" style="font-size:2em;"></div>
         </div>
-        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:100px;">
+        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:120px;display:flex;flex-direction:column;align-items:center;">
           <h3>Vorne/Hinten</h3>
+          <canvas id="carVH" width="60" height="60" style="margin-bottom:0.5em;"></canvas>
           <div id="vh_val" style="font-size:2em;"></div>
         </div>
       </div>
@@ -224,6 +226,9 @@
                 // Tab2: Einzelanzeige
                 document.getElementById('lr_val').textContent = `${Math.round(rollLabel)}°`;
                 document.getElementById('vh_val').textContent = `${Math.round(pitchLabel)}°`;
+                // Auto-Icons zeichnen
+                drawCarLR(rollLabel);
+                drawCarVH(pitchLabel);
                 let lrDir = '';
                 if (rollLabel > 2) lrDir = 'Auto neigt nach rechts';
                 else if (rollLabel < -2) lrDir = 'Auto neigt nach links';
@@ -239,8 +244,54 @@
                   `Pitch: ${Math.round(pitchLabel)}°\nRoll: ${Math.round(rollLabel)}°`;
                 document.getElementById('lr_val').textContent = `${Math.round(rollLabel)}°`;
                 document.getElementById('vh_val').textContent = `${Math.round(pitchLabel)}°`;
+                drawCarLR(rollLabel);
+                drawCarVH(pitchLabel);
                 document.getElementById('tilt_lr').textContent = '';
                 document.getElementById('tilt_vh').textContent = '';
+    <script>
+      // Zeichnet ein Auto von oben, rotiert je nach Links/Rechts-Neigung
+      function drawCarLR(angle) {
+        const canvas = document.getElementById('carLR');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.save();
+        ctx.translate(30,30);
+        ctx.rotate(angle * Math.PI / 180);
+        // Auto-Körper
+        ctx.fillStyle = '#1976d2';
+        ctx.fillRect(-20,-10,40,20);
+        // Fenster
+        ctx.fillStyle = '#90caf9';
+        ctx.fillRect(-10,-7,20,14);
+        // Räder
+        ctx.fillStyle = '#333';
+        ctx.fillRect(-18,-13,8,6);
+        ctx.fillRect(10,-13,8,6);
+        ctx.fillRect(-18,7,8,6);
+        ctx.fillRect(10,7,8,6);
+        ctx.restore();
+      }
+      // Zeichnet ein Auto von der Seite, kippt je nach Vorne/Hinten-Neigung
+      function drawCarVH(angle) {
+        const canvas = document.getElementById('carVH');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.save();
+        ctx.translate(30,40);
+        ctx.rotate(-angle * Math.PI / 180);
+        // Auto-Körper
+        ctx.fillStyle = '#1976d2';
+        ctx.fillRect(-20,-15,40,15);
+        // Fenster
+        ctx.fillStyle = '#90caf9';
+        ctx.fillRect(-10,-13,20,8);
+        // Räder
+        ctx.fillStyle = '#333';
+        ctx.beginPath(); ctx.arc(-12,0,5,0,2*Math.PI); ctx.fill();
+        ctx.beginPath(); ctx.arc(12,0,5,0,2*Math.PI); ctx.fill();
+        ctx.restore();
+      }
+    </script>
               }
               drawLevel(x, y);
               document.getElementById('output').textContent = '';
