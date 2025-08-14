@@ -123,7 +123,7 @@
         </div>
         <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:120px;display:flex;flex-direction:column;align-items:center;">
           <h3>Vorne/Hinten</h3>
-          <canvas id="carVH" width="60" height="60" style="margin-bottom:0.5em;"></canvas>
+          <canvas id="carVHimg" width="60" height="60" style="margin-bottom:0.5em;"></canvas>
           <div id="vh_val" style="font-size:2em;"></div>
         </div>
       </div>
@@ -248,6 +248,10 @@
                 drawCarVH(pitchLabel);
                 document.getElementById('tilt_lr').textContent = '';
                 document.getElementById('tilt_vh').textContent = '';
+            }
+        }
+        // Ende des ersten Script-Blocks
+    </script>
     <script>
       // Zeichnet ein Auto von oben, rotiert je nach Links/Rechts-Neigung
       function drawCarLR(angle) {
@@ -273,23 +277,18 @@
       }
       // Zeichnet ein Auto von der Seite, kippt je nach Vorne/Hinten-Neigung
       function drawCarVH(angle) {
-        const canvas = document.getElementById('carVH');
+        const canvas = document.getElementById('carVHimg');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.save();
-        ctx.translate(30,40);
+        ctx.translate(30,30);
         ctx.rotate(-angle * Math.PI / 180);
-        // Auto-Körper
-        ctx.fillStyle = '#1976d2';
-        ctx.fillRect(-20,-15,40,15);
-        // Fenster
-        ctx.fillStyle = '#90caf9';
-        ctx.fillRect(-10,-13,20,8);
-        // Räder
-        ctx.fillStyle = '#333';
-        ctx.beginPath(); ctx.arc(-12,0,5,0,2*Math.PI); ctx.fill();
-        ctx.beginPath(); ctx.arc(12,0,5,0,2*Math.PI); ctx.fill();
-        ctx.restore();
+        const img = new Image();
+        img.src = 'seitenansicht.png';
+        img.onload = function() {
+          ctx.drawImage(img, -25, -20, 50, 40);
+          ctx.restore();
+        };
       }
     </script>
               }
