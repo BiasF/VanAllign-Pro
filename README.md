@@ -15,6 +15,7 @@ Dieses Projekt besteht aus drei Komponenten:
    - Klicke auf "Mit VanAlign Pro Verbinden".
    - Grafische Wasserwaage zeigt Pitch/Roll live an.
    - Kalibrierung per WebBLE nicht möglich, nur über ESPHome-Webserver.
+     - Dazu mit dem WLAN des VanAlign Pro verbinden und im Browser die Adresse des Geräts aufrufen: http://192.168.4.1
 
 
 **Hinweise:**
