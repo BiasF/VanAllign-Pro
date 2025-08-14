@@ -74,22 +74,60 @@
     <h1>VanAlign Pro 1.0</h1>
     <button id="connect">Mit VanAlign Pro Verbinden</button>
     <pre id="output"></pre>
-    <h2>Ausrichtung</h2>
-    <label for="axisMode" style="margin-bottom:0.5em;display:block;">Achsen-Modus:</label>
-    <select id="axisMode" style="margin-bottom:0.5em;">
-      <option value="normal">Standard</option>
-      <option value="swap">Vorne/Hinten &lt;-&gt; Links/Rechts tauschen</option>
-      <option value="invert">Achsen invertieren</option>
-    </select>
-    <label for="labelMode" style="margin-bottom:0.5em;display:block;">Beschriftung:</label>
-    <select id="labelMode" style="margin-bottom:1em;">
-      <option value="pitchroll">Pitch/Roll</option>
-      <option value="lr_vh">Links/Rechts &amp; Vorne/Hinten</option>
-    </select>
-    <div id="tilt" style="font-size:1.2em; margin-bottom:1em;"></div>
-    <div class="canvas-wrapper">
-      <canvas id="levelCanvas" width="200" height="200" style="border:1px solid #ccc; background:#f8f8f8; border-radius:50%; display:block;"></canvas>
+    <div style="margin-bottom:1em;">
+      <button id="tab1Btn" class="tabBtn" style="background:#1976d2;color:#fff;">Wasserwaage</button>
+      <button id="tab2Btn" class="tabBtn">Neigung einzeln</button>
     </div>
+    <div id="tab1">
+      <h2>Ausrichtung</h2>
+      <label for="axisMode" style="margin-bottom:0.5em;display:block;">Achsen-Modus:</label>
+      <select id="axisMode" style="margin-bottom:0.5em;">
+        <option value="normal">Standard</option>
+        <option value="swap">Vorne/Hinten &lt;-&gt; Links/Rechts tauschen</option>
+        <option value="invert">Achsen invertieren</option>
+      </select>
+      <label for="labelMode" style="margin-bottom:0.5em;display:block;">Beschriftung:</label>
+      <select id="labelMode" style="margin-bottom:1em;">
+        <option value="pitchroll">Pitch/Roll</option>
+        <option value="lr_vh">Links/Rechts &amp; Vorne/Hinten</option>
+      </select>
+      <div id="tilt" style="font-size:1.2em; margin-bottom:1em;"></div>
+      <div class="canvas-wrapper">
+        <canvas id="levelCanvas" width="200" height="200" style="border:1px solid #ccc; background:#f8f8f8; border-radius:50%; display:block;"></canvas>
+      </div>
+    </div>
+    <div id="tab2" style="display:none;">
+      <h2>Neigung einzeln</h2>
+      <div id="tilt_lr" style="font-size:1.2em; margin-bottom:1em;"></div>
+      <div id="tilt_vh" style="font-size:1.2em; margin-bottom:1em;"></div>
+      <div style="display:flex;justify-content:center;gap:2em;">
+        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:100px;">
+          <h3>Links/Rechts</h3>
+          <div id="lr_val" style="font-size:2em;"></div>
+        </div>
+        <div style="background:#e3f2fd;padding:1em;border-radius:8px;min-width:100px;">
+          <h3>Vorne/Hinten</h3>
+          <div id="vh_val" style="font-size:2em;"></div>
+        </div>
+      </div>
+    </div>
+    // Tab Umschaltung
+    document.getElementById('tab1Btn').onclick = function() {
+      document.getElementById('tab1').style.display = '';
+      document.getElementById('tab2').style.display = 'none';
+      this.style.background = '#1976d2';
+      this.style.color = '#fff';
+      document.getElementById('tab2Btn').style.background = '';
+      document.getElementById('tab2Btn').style.color = '';
+    };
+    document.getElementById('tab2Btn').onclick = function() {
+      document.getElementById('tab1').style.display = 'none';
+      document.getElementById('tab2').style.display = '';
+      this.style.background = '#1976d2';
+      this.style.color = '#fff';
+      document.getElementById('tab1Btn').style.background = '';
+      document.getElementById('tab1Btn').style.color = '';
+    };
   </div>
   <script>
     function drawLevel(x, y) {
@@ -183,9 +221,26 @@
                 else if (pitchLabel < -2) directionText += 'Auto neigt nach hinten';
                 else directionText += 'Auto steht gerade (vorne/hinten)';
                 document.getElementById('tilt').textContent = directionText + `\nLinks/Rechts: ${Math.round(rollLabel)}°\nVorne/Hinten: ${Math.round(pitchLabel)}°`;
+                // Tab2: Einzelanzeige
+                document.getElementById('lr_val').textContent = `${Math.round(rollLabel)}°`;
+                document.getElementById('vh_val').textContent = `${Math.round(pitchLabel)}°`;
+                let lrDir = '';
+                if (rollLabel > 2) lrDir = 'Auto neigt nach rechts';
+                else if (rollLabel < -2) lrDir = 'Auto neigt nach links';
+                else lrDir = 'Auto steht gerade';
+                document.getElementById('tilt_lr').textContent = lrDir;
+                let vhDir = '';
+                if (pitchLabel > 2) vhDir = 'Auto neigt nach vorne';
+                else if (pitchLabel < -2) vhDir = 'Auto neigt nach hinten';
+                else vhDir = 'Auto steht gerade';
+                document.getElementById('tilt_vh').textContent = vhDir;
               } else {
                 document.getElementById('tilt').textContent =
                   `Pitch: ${Math.round(pitchLabel)}°\nRoll: ${Math.round(rollLabel)}°`;
+                document.getElementById('lr_val').textContent = `${Math.round(rollLabel)}°`;
+                document.getElementById('vh_val').textContent = `${Math.round(pitchLabel)}°`;
+                document.getElementById('tilt_lr').textContent = '';
+                document.getElementById('tilt_vh').textContent = '';
               }
               drawLevel(x, y);
               document.getElementById('output').textContent = '';
