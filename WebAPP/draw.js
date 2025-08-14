@@ -49,13 +49,15 @@ export function drawCarLR(angle) {
     carLRImg = new Image();
     carLRImg.src = 'frontansicht.png';
     carLRImg.onload = function() {
-      ctx.drawImage(carLRImg, -50, -40, 100, 80);
-      ctx.restore();
+      // Erst beim nächsten Intervall zeichnen
     };
-  } else if (carLRImg.complete) {
-    ctx.drawImage(carLRImg, -50, -40, 100, 80);
     ctx.restore();
+    return;
   }
+  if (carLRImg.complete) {
+    ctx.drawImage(carLRImg, -50, -40, 100, 80);
+  }
+  ctx.restore();
 }
 
 let carVHImg = null;
@@ -70,11 +72,13 @@ export function drawCarVH(angle) {
     carVHImg = new Image();
     carVHImg.src = 'seitenansicht.png';
     carVHImg.onload = function() {
-      ctx.drawImage(carVHImg, -50, -40, 100, 80);
-      ctx.restore();
+      // Erst beim nächsten Intervall zeichnen
     };
-  } else if (carVHImg.complete) {
-    ctx.drawImage(carVHImg, -50, -40, 100, 80);
     ctx.restore();
+    return;
   }
+  if (carVHImg.complete) {
+    ctx.drawImage(carVHImg, -50, -40, 100, 80);
+  }
+  ctx.restore();
 }
