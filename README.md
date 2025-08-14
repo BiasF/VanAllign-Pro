@@ -1,3 +1,5 @@
+## ACHTUNG: Code zum großen Teil durch KI genriert, er kann fehlerhaft sein oder Sicherheitslücken enthalten ##
+
 # VanAlign Pro 1.0 – WebBLE & ESPHome Projekt
 
 Dieses Projekt besteht aus drei Komponenten:
