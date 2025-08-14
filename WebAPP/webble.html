@@ -76,10 +76,15 @@
     <pre id="output"></pre>
     <h2>Ausrichtung</h2>
     <label for="axisMode" style="margin-bottom:0.5em;display:block;">Achsen-Modus:</label>
-    <select id="axisMode" style="margin-bottom:1em;">
+    <select id="axisMode" style="margin-bottom:0.5em;">
       <option value="normal">Standard</option>
-      <option value="swap">Pitch/Roll tauschen</option>
+      <option value="swap">Vorne/Hinten &lt;-&gt; Links/Rechts tauschen</option>
       <option value="invert">Achsen invertieren</option>
+    </select>
+    <label for="labelMode" style="margin-bottom:0.5em;display:block;">Beschriftung:</label>
+    <select id="labelMode" style="margin-bottom:1em;">
+      <option value="pitchroll">Pitch/Roll</option>
+      <option value="lr_vh">Links/Rechts &amp; Vorne/Hinten</option>
     </select>
     <div id="tilt" style="font-size:1.2em; margin-bottom:1em;"></div>
     <div class="canvas-wrapper">
@@ -168,8 +173,15 @@
                 x = -lastRoll; y = -lastPitch;
                 pitchLabel = -lastPitch; rollLabel = -lastRoll;
               }
+              let labelMode = document.getElementById('labelMode').value;
+              let pitchText = 'Pitch (vorne/hinten)';
+              let rollText = 'Roll (links/rechts)';
+              if (labelMode === 'lr_vh') {
+                pitchText = 'Vorne/Hinten';
+                rollText = 'Links/Rechts';
+              }
               document.getElementById('tilt').textContent =
-                `Pitch (vorne/hinten): ${Math.round(pitchLabel)}°\nRoll (links/rechts): ${Math.round(rollLabel)}°`;
+                `${pitchText}: ${Math.round(pitchLabel)}°\n${rollText}: ${Math.round(rollLabel)}°`;
               drawLevel(x, y);
               document.getElementById('output').textContent = '';
             } else {
