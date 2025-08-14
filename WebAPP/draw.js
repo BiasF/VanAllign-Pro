@@ -49,7 +49,7 @@ export function drawCarLR(angle) {
   ctx.rotate(-angle * Math.PI / 180);
   if (!carLRImg) {
     carLRImg = new Image();
-    carLRImg.src = 'frontansicht.png';
+    carLRImg.src = 'frontansicht.svg';
     carLRImg.onload = function() {
       // Erst beim nächsten Intervall zeichnen
     };
