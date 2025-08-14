@@ -42,14 +42,14 @@ export function drawCarLR(angle) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
-  ctx.translate(30,30);
+  ctx.translate(50,40); // Mittelpunkt für größeres Bild
   ctx.rotate(-angle * Math.PI / 180);
-  ctx.fillStyle = '#1976d2';
-  ctx.fillRect(-18,-13,8,6);
-  ctx.fillRect(10,-13,8,6);
-  ctx.fillRect(-18,7,8,6);
-  ctx.fillRect(10,7,8,6);
-  ctx.restore();
+  const img = new Image();
+  img.src = 'frontansicht.png';
+  img.onload = function() {
+    ctx.drawImage(img, -50, -40, 100, 80);
+    ctx.restore();
+  };
 }
 
 export function drawCarVH(angle) {
@@ -57,12 +57,12 @@ export function drawCarVH(angle) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
-  ctx.translate(30,30);
+  ctx.translate(50,40); // Mittelpunkt für größeres Bild
   ctx.rotate(-angle * Math.PI / 180);
   const img = new Image();
   img.src = 'seitenansicht.png';
   img.onload = function() {
-    ctx.drawImage(img, -25, -20, 50, 40);
+    ctx.drawImage(img, -50, -40, 100, 80);
     ctx.restore();
   };
 }
