@@ -22,6 +22,7 @@ Dieses Projekt besteht aus drei Komponenten:
 - Nur ein BLE-Client kann gleichzeitig verbunden sein (also nur ein Smartphone gleichzeitig).
 - Kalibrierung erfolgt ausschließlich über das ESPHome-Webserver-Portal.
 - Die Webble.html muss auf einem Webserver bereitgestellt werden
+  - Oder nutze diese URL: https://biasf.github.io/VanAllign-Pro/WebAPP/webble.html 
 
 ## Ordnerstruktur
 - esp32_ble.yaml
