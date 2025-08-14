@@ -19,9 +19,9 @@ Dieses Projekt besteht aus drei Komponenten:
 
 
 **Hinweise:**
-- Nur ein BLE-Client kann gleichzeitig verbunden sein (WebBLE oder ESP32-Client).
-- Service- und Characteristic-UUIDs müssen in allen Komponenten übereinstimmen.
+- Nur ein BLE-Client kann gleichzeitig verbunden sein (also nur ein Smartphone gleichzeitig).
 - Kalibrierung erfolgt ausschließlich über das ESPHome-Webserver-Portal.
+- Die Webble.html muss auf einem Webserver bereitgestellt werden
 
 ## Ordnerstruktur
 - esp32_ble.yaml
