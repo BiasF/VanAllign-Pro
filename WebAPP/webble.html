@@ -75,6 +75,12 @@
     <button id="connect">Mit VanAlign Pro Verbinden</button>
     <pre id="output"></pre>
     <h2>Ausrichtung</h2>
+    <label for="axisMode" style="margin-bottom:0.5em;display:block;">Achsen-Modus:</label>
+    <select id="axisMode" style="margin-bottom:1em;">
+      <option value="normal">Standard</option>
+      <option value="swap">Pitch/Roll tauschen</option>
+      <option value="invert">Achsen invertieren</option>
+    </select>
     <div id="tilt" style="font-size:1.2em; margin-bottom:1em;"></div>
     <div class="canvas-wrapper">
       <canvas id="levelCanvas" width="200" height="200" style="border:1px solid #ccc; background:#f8f8f8; border-radius:50%; display:block;"></canvas>
@@ -152,9 +158,19 @@
             if (pitch !== null) lastPitch = pitch;
             if (roll !== null) lastRoll = roll;
             if (lastPitch !== null && lastRoll !== null) {
+              let mode = document.getElementById('axisMode').value;
+              let x = lastRoll, y = lastPitch;
+              let pitchLabel = lastPitch, rollLabel = lastRoll;
+              if (mode === 'swap') {
+                x = lastPitch; y = lastRoll;
+                pitchLabel = lastRoll; rollLabel = lastPitch;
+              } else if (mode === 'invert') {
+                x = -lastRoll; y = -lastPitch;
+                pitchLabel = -lastPitch; rollLabel = -lastRoll;
+              }
               document.getElementById('tilt').textContent =
-                `Pitch (vorne/hinten): ${Math.round(lastPitch)}°\nRoll (links/rechts): ${Math.round(lastRoll)}°`;
-              drawLevel(lastRoll, lastPitch);
+                `Pitch (vorne/hinten): ${Math.round(pitchLabel)}°\nRoll (links/rechts): ${Math.round(rollLabel)}°`;
+              drawLevel(x, y);
               document.getElementById('output').textContent = '';
             } else {
               document.getElementById('tilt').textContent = 'Wert nicht verfügbar';
