@@ -37,32 +37,44 @@ export function drawLevel(x, y) {
   ctx.stroke();
 }
 
+let carLRImg = null;
 export function drawCarLR(angle) {
   const canvas = document.getElementById('carLR');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
-  ctx.translate(50,40); // Mittelpunkt für größeres Bild
+  ctx.translate(50,40);
   ctx.rotate(-angle * Math.PI / 180);
-  const img = new Image();
-  img.src = 'frontansicht.png';
-  img.onload = function() {
-    ctx.drawImage(img, -50, -40, 100, 80);
+  if (!carLRImg) {
+    carLRImg = new Image();
+    carLRImg.src = 'frontansicht.png';
+    carLRImg.onload = function() {
+      ctx.drawImage(carLRImg, -50, -40, 100, 80);
+      ctx.restore();
+    };
+  } else if (carLRImg.complete) {
+    ctx.drawImage(carLRImg, -50, -40, 100, 80);
     ctx.restore();
-  };
+  }
 }
 
+let carVHImg = null;
 export function drawCarVH(angle) {
   const canvas = document.getElementById('carVHimg');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
-  ctx.translate(50,40); // Mittelpunkt für größeres Bild
+  ctx.translate(50,40);
   ctx.rotate(-angle * Math.PI / 180);
-  const img = new Image();
-  img.src = 'seitenansicht.png';
-  img.onload = function() {
-    ctx.drawImage(img, -50, -40, 100, 80);
+  if (!carVHImg) {
+    carVHImg = new Image();
+    carVHImg.src = 'seitenansicht.png';
+    carVHImg.onload = function() {
+      ctx.drawImage(carVHImg, -50, -40, 100, 80);
+      ctx.restore();
+    };
+  } else if (carVHImg.complete) {
+    ctx.drawImage(carVHImg, -50, -40, 100, 80);
     ctx.restore();
-  };
+  }
 }
