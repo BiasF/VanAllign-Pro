@@ -10,10 +10,11 @@ esp32:
 
 
 logger:
-  level: WARN
+  level: debug
 
 espnow: 
   channel: 1
+
 sensor:
   - platform: mpu6050
     #address: 0x69
@@ -59,8 +60,8 @@ sensor:
       - exponential_moving_average:
           alpha: 0.2
     on_value:
-        espnow.send:
-           address: 11:22:33:44:55:66
+        espnow.broadcast:
+           #address: 11:22:33:44:55:66
            data: "hallo"
 
   - platform: template

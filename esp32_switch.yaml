@@ -7,57 +7,15 @@ esp32:
     type: esp-idf
 
 logger:
-  baud_rate: 0
-  level: WARN
+  level: debug
 
-wifi:
-  ssid: "DEIN_SSID"
-  password: "DEIN_PASSWORT"
-  enable_on_boot: false
+binary_sensor:
+  - platform: gpio
+    pin: GPIO13
+    name: "Button"
+    id: button
+    internal: false
+    on_press:
+     then:
+       - logger.log: "Button wurde gedrückt!"
 
-api:
-web_server:
-  port: 80
-  # ota: true   <-- entfernen!
-
-ota:
-  - platform: esphome      # klassisches OTA (benötigt 'api:')
-  - platform: web_server   # OTA im Web-Interface
-
-
-# BLE-Stack nur für eigenen GATT-Server
-esp32_ble:
-  enable_on_boot: false
-
-esp32_ble_server:
-  manufacturer: "MyLab"
-  model: "WebBLE"
-  services:
-    - uuid: "12345678-1234-5678-1234-56789abcdef0"
-      characteristics:
-        # Write "1" -> WLAN-Fenster starten/verlängern
-        - uuid: "12345678-1234-5678-1234-56789abcdef1"
-          name: "StartMaintenance"
-          value: "0"
-          on_write:
-            then:
-              - lambda: |-
-                  if (x.get_value().find("1") != std::string::npos) {
-                    id(start_wifi_window).execute();
-                  }
-        # Status bei Bedarf lesbar (z. B. "WIFI,14" oder "BLE,0")
-        - uuid: "12345678-1234-5678-1234-56789abcdef2"
-          name: "Status"
-          value: "BLE,0"
-          on_read:
-            then:
-              - lambda: |-
-                  char buf[16];
-                  snprintf(buf, sizeof(buf), "%s,%d",
-                           id(_netmode_is_wifi) ? "WIFI" : "BLE",
-                           (int) id(_wifi_minutes_left));
-                  x.set_value(std::string(buf));
-
-number:
-  - platform: template
-    id: wifi_window_minu
