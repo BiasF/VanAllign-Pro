@@ -5,10 +5,15 @@ esphome:
 
 esp32:
   board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
 
 logger:
   level: WARN
 
+espnow: 
+  channel: 1
 sensor:
   - platform: mpu6050
     #address: 0x69
@@ -53,6 +58,11 @@ sensor:
           send_every: 1
       - exponential_moving_average:
           alpha: 0.2
+    on_value:
+        espnow.send:
+           address: 11:22:33:44:55:66
+           data: "hallo"
+
   - platform: template
     name: "Neigung Roll"
     id: roll
@@ -120,20 +130,18 @@ i2c:
   scl: GPIO9 
   scan: true
 
-web_server:
-  port: 80
-  auth:
-    username: "admin"
-    password: "kalibrierung"
-
-ota:
-  platform: web_server
+#web_server:
+#  port: 80
 
 
-wifi:
-  ap:
-    ssid: "VanAlign-Setup"
-    password: "kalibrierung"
+#ota:
+#  platform: web_server
+
+
+#wifi:
+#  ap:
+#    ssid: "VanAlign-Setup"
+#    password: "kalibrierung"
 
 
 

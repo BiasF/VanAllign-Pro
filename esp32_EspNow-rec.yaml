@@ -1,0 +1,22 @@
+esphome:
+  name: vanalign
+  friendly_name: "VanAlign Pro"
+
+
+esp32:
+  board: esp32-s3-devkitc-1
+
+logger:
+  level: WARN
+
+espnow:
+  channel: 1
+  on_broadcast:
+    - logger.log:
+        format: "Sent to %s from %s: %s RSSI: %ddBm"
+        args:
+          - format_mac_address_pretty(info.des_addr).c_str()
+          - format_mac_address_pretty(info.src_addr).c_str()
+          - format_hex_pretty(data, size).c_str()
+          - info.rx_ctrl->rssi
+
