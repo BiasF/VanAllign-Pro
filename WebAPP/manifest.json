@@ -1,0 +1,15 @@
+{
+  "name": "VanAlign Pro",
+  "short_name": "VanAlign",
+  "start_url": "webble.html",
+  "display": "standalone",
+  "background_color": "#f4f4f4",
+  "theme_color": "#1976d2",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
