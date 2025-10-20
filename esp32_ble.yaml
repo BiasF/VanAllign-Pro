@@ -15,6 +15,16 @@ logger:
 espnow: 
   channel: 1
 
+wifi:
+  ap:
+    ssid: "VanAlign-Setup"
+    password: "kalibrierung"
+    
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: admin
 sensor:
   - platform: mpu6050
     #address: 0x69
